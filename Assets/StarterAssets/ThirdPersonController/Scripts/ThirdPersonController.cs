@@ -14,6 +14,9 @@ namespace StarterAssets
 #endif
     public class ThirdPersonController : MonoBehaviour
     {
+        int _jumpCount = 0;
+        int _maxjump = 2;//JumpAndGravity用
+
         [Header("Player")]
         [Tooltip("Move speed of the character in m/s")]
         public float MoveSpeed = 2.0f;
@@ -284,8 +287,11 @@ namespace StarterAssets
 
         private void JumpAndGravity()
         {
+
             if (Grounded)
             {
+                _jumpCount = 0;//ジャンプ回数リセット
+
                 // reset the fall timeout timer
                 _fallTimeoutDelta = FallTimeout;
 
@@ -303,10 +309,12 @@ namespace StarterAssets
                 }
 
                 // Jump
-                if (_input.jump && _jumpTimeoutDelta <= 0.0f)
+                if (_input.jump && _jumpCount < _maxjump && _jumpTimeoutDelta <= 0.0f)
                 {
                     // the square root of H * -2 * G = how much velocity needed to reach desired height
                     _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
+                    _jumpCount++;
+                    _input.jump = false;
 
                     // update animator if using character
                     if (_hasAnimator)
@@ -340,9 +348,20 @@ namespace StarterAssets
                     }
                 }
 
-                // if we are not grounded, do not jump
-                _input.jump = false;
-            }
+                if (_input.jump && _jumpCount < _maxjump)
+                {
+                    float jumpPower = JumpHeight;
+
+                    if (_jumpCount == 1)
+                    {
+                        jumpPower = JumpHeight * 1.5f; // 二段目の跳躍力調整
+                    }
+
+                    _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity * 0.9f);
+                    _jumpCount++;
+                    _input.jump = false;
+                }
+        }
 
             // apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
             if (_verticalVelocity < _terminalVelocity)
