@@ -42,6 +42,9 @@ namespace StarterAssets
         [Tooltip("The height the player can jump")]
         public float JumpHeight = 1.2f;
 
+        [Tooltip("二段ジャンプでの跳躍力補正")]
+        public float HighJump = 1.5f;
+
         [Tooltip("The character uses its own gravity value. The engine default is -9.81f")]
         public float Gravity = -15.0f;
 
@@ -115,6 +118,8 @@ namespace StarterAssets
         private const float _threshold = 0.01f;
 
         private bool _hasAnimator;
+
+        private bool _wasGrounded;
 
         private bool IsCurrentDeviceMouse
         {
@@ -234,6 +239,13 @@ namespace StarterAssets
             float speedOffset = 0.1f;
             float inputMagnitude = _input.analogMovement ? _input.move.magnitude : 1f;
 
+            float speedChangeRate = SpeedChangeRate;
+
+            if (!Grounded)
+            {
+                speedChangeRate *= 0.05f;//空中での移動補正
+            }
+
             // accelerate or decelerate to target speed
             if (currentHorizontalSpeed < targetSpeed - speedOffset ||
                 currentHorizontalSpeed > targetSpeed + speedOffset)
@@ -241,7 +253,7 @@ namespace StarterAssets
                 // creates curved result rather than a linear one giving a more organic speed change
                 // note T in Lerp is clamped, so we don't need to clamp our speed
                 _speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude,
-                    Time.deltaTime * SpeedChangeRate);
+                    Time.deltaTime * speedChangeRate);
 
                 // round speed to 3 decimal places
                 _speed = Mathf.Round(_speed * 1000f) / 1000f;
@@ -251,7 +263,7 @@ namespace StarterAssets
                 _speed = targetSpeed;
             }
 
-            _animationBlend = Mathf.Lerp(_animationBlend, targetSpeed, Time.deltaTime * SpeedChangeRate);
+            _animationBlend = Mathf.Lerp(_animationBlend, targetSpeed, Time.deltaTime * speedChangeRate);
             if (_animationBlend < 0.01f) _animationBlend = 0f;
 
             // normalise input direction
@@ -287,10 +299,15 @@ namespace StarterAssets
 
         private void JumpAndGravity()
         {
+            
 
             if (Grounded)
             {
-                _jumpCount = 0;//ジャンプ回数リセット
+                if (!_wasGrounded)
+                {
+                    _jumpCount = 0;//ジャンプ回数リセット
+                }
+                
 
                 // reset the fall timeout timer
                 _fallTimeoutDelta = FallTimeout;
@@ -354,7 +371,7 @@ namespace StarterAssets
 
                     if (_jumpCount == 1)
                     {
-                        jumpPower = JumpHeight * 1.5f; // 二段目の跳躍力調整
+                        jumpPower = JumpHeight * HighJump; // 二段目の跳躍力調整
                     }
 
                     _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity * 0.9f);
@@ -368,6 +385,8 @@ namespace StarterAssets
             {
                 _verticalVelocity += Gravity * Time.deltaTime;
             }
+
+            _wasGrounded = Grounded;
         }
 
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
