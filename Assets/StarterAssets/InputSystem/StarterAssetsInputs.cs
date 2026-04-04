@@ -12,6 +12,7 @@ namespace StarterAssets
 		public Vector2 look;
 		public bool jump;
 		public bool sprint;
+		public bool timeSlow;//追加機能
 
 		[Header("Movement Settings")]
 		public bool analogMovement;
@@ -43,10 +44,16 @@ namespace StarterAssets
 		{
 			SprintInput(value.isPressed);
 		}
+
+        //スロー機能
+        public void OnTimeSlow(InputValue value)
+        {
+            TimeSlowInput(value.isPressed);
+        }
 #endif
 
 
-		public void MoveInput(Vector2 newMoveDirection)
+        public void MoveInput(Vector2 newMoveDirection)
 		{
 			move = newMoveDirection;
 		} 
@@ -66,7 +73,12 @@ namespace StarterAssets
 			sprint = newSprintState;
 		}
 
-		private void OnApplicationFocus(bool hasFocus)
+        public void TimeSlowInput(bool newTimeSlowState)
+        {
+            timeSlow = newTimeSlowState;
+        }
+
+        private void OnApplicationFocus(bool hasFocus)
 		{
 			SetCursorState(cursorLocked);
 		}
