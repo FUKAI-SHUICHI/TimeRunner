@@ -378,6 +378,11 @@ namespace StarterAssets
                     _jumpCount++;
                     _input.jump = false;
                 }
+
+                if (_jumpCount >= _maxjump)
+                {
+                    _input.jump = false;
+                }
         }
 
             // apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
