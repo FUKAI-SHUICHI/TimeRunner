@@ -6,7 +6,7 @@ public class Goal : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("Goal!!");
+            Debug.Log("Goal!! Clear Time:clearTime");
 
         }
     }
