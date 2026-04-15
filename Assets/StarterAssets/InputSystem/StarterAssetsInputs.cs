@@ -12,9 +12,10 @@ namespace StarterAssets
 		public Vector2 look;
 		public bool jump;
 		public bool sprint;
-		public bool timeSlow;//追加機能
+		public bool timeSlow;//以下追加機能 
+        public bool slide;
 
-		[Header("Movement Settings")]
+        [Header("Movement Settings")]
 		public bool analogMovement;
 
 		[Header("Mouse Cursor Settings")]
@@ -50,6 +51,12 @@ namespace StarterAssets
         {
             TimeSlowInput(value.isPressed);
         }
+
+        public void OnSlide(InputValue value)
+        {
+            SlideInput(value.isPressed);
+        }
+
 #endif
 
 
@@ -78,6 +85,11 @@ namespace StarterAssets
             timeSlow = newTimeSlowState;
         }
 
+		public void SlideInput(bool newSlideState)
+				{
+					slide = newSlideState;
+				}
+
         private void OnApplicationFocus(bool hasFocus)
 		{
 			SetCursorState(cursorLocked);
@@ -87,6 +99,9 @@ namespace StarterAssets
 		{
 			Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
 		}
-	}
+
+        
+
+    }
 	
 }

@@ -23,6 +23,7 @@ namespace StarterAssets
 
         [Tooltip("Sprint speed of the character in m/s")]
         public float SprintSpeed = 5.335f;
+        public float SlidingSpeed = 15.0f;
 
         [Tooltip("How fast the character turns to face movement direction")]
         [Range(0.0f, 0.3f)]
@@ -84,6 +85,7 @@ namespace StarterAssets
         [Tooltip("For locking the camera position on all axis")]
         public bool LockCameraPosition = false;
 
+
         // cinemachine
         private float _cinemachineTargetYaw;
         private float _cinemachineTargetPitch;
@@ -106,6 +108,7 @@ namespace StarterAssets
         private int _animIDJump;
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
+        private int _animIDSlide;//追加分
 
 #if ENABLE_INPUT_SYSTEM 
         private PlayerInput _playerInput;
@@ -141,6 +144,10 @@ namespace StarterAssets
             {
                 _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
             }
+
+            
+        
+
         }
 
         private void Start()
@@ -170,6 +177,7 @@ namespace StarterAssets
             JumpAndGravity();
             GroundedCheck();
             Move();
+            
         }
 
         private void LateUpdate()
@@ -393,6 +401,9 @@ namespace StarterAssets
 
             _wasGrounded = Grounded;
         }
+
+
+        
 
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
         {
