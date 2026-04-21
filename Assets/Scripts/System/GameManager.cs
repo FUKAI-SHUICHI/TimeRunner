@@ -4,8 +4,10 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
+    public static string clearTime;
 
     public TMP_Text timeText;
+
 
     private float time;
     private bool isPlaying = true;
@@ -29,6 +31,7 @@ public class GameManager : MonoBehaviour
     public void Goal()
     {
         isPlaying = false;
+        clearTime = FormatTime(time);
         Debug.Log("クリアタイム:" + FormatTime(time));
     }
 
