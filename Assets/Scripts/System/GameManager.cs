@@ -6,6 +6,9 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     public static string clearTime;
 
+    public static string bestTime;
+    public static bool isNewRecord;
+
     public TMP_Text timeText;
 
 
@@ -32,7 +35,23 @@ public class GameManager : MonoBehaviour
     {
         isPlaying = false;
         clearTime = FormatTime(time);
-        Debug.Log("クリアタイム:" + FormatTime(time));
+
+        float best = PlayerPrefs.GetFloat("BestTime", 9999f);
+
+        if (time < best)
+        {
+            PlayerPrefs.SetFloat("BestTime", time);
+            PlayerPrefs.Save();
+
+            best = time;
+            isNewRecord = true;
+        }
+        else
+        {
+            isNewRecord = false;
+        }
+
+        bestTime = FormatTime(best);
     }
 
     string FormatTime(float t)
