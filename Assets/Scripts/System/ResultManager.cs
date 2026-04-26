@@ -8,7 +8,10 @@ public class ResultManger : MonoBehaviour
 
     void Start()
     {
-        resultText.text ="Goal!!\n" +  "ClearTime : " + GameManager.clearTime + "\n" + "BestTime : " + GameManager.bestTime + "\n";
+        resultText.text =
+            "Goal!!\n" 
+            +  "ClearTime : " + GameManager.clearTime + "\n"
+            + "BestTime : " + GameManager.bestTime + "\n";
 
         if (GameManager.isNewRecord)
         {
